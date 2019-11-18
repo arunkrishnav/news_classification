@@ -374,14 +374,15 @@ def test_nb_accuracy(x_train_count, x_train_tfidf, x_train_tfidf_ngram, x_train_
     print("NB, CharLevel Vectors: ", accuracy)
 
 
-def fetch_accuracy_from_existing_model(feature_vector_valid, valid_y):
+def fetch_accuracy_from_existing_model(feature_vector_valid, valid_y, model_name):
     """return accuracy from exiting model"""
 
-    loaded_model = pickle.load(open('classification/classified_model/nb_n_gram_vector.sav',
-                                    'rb'))
+    file_name = 'classification/classified_model/%s_vector.sav' % model_name
+
+    loaded_model = pickle.load(open(file_name, 'rb'))
     predictions = loaded_model.predict(feature_vector_valid)
     accuracy = metrics.accuracy_score(predictions, valid_y)
-    print("NB, n-gram: ", accuracy)
+    print("NB, %s: " % model_name, accuracy)
 
 
 def fetch_predictions_n_gram(feature_vector_valid):
@@ -399,7 +400,7 @@ def fetch_predictions_count_vector(feature_vector_valid):
 
 
 def fetch_predictions_word_level(feature_vector_valid):
-    loaded_model = pickle.load(open('classification/classified_model/nb_word_level.sav',
+    loaded_model = pickle.load(open('classification/classified_model/nb_word_level_vector.sav',
                                     'rb'))
     predictions = loaded_model.predict(feature_vector_valid)
     return predictions

@@ -14,15 +14,27 @@ def run_ml():
                      x_valid_count, x_valid_tfidf, x_valid_tfidf_ngram, x_valid_tfidf_ngram_chars, valid_y)
 
 
-def run_ml_from_model():
+def run_ml_from_model(model_name):
     train_df = load_test_data_set_from_csv()
     whole_df = read_data_frame()
     valid_y = train_df['labels']
     valid_y = encode_label_data_for_accuracy_test(valid_y)
-    x_test_tfidf_ngram = create_ngram_tf_idf_for_ip(train_df, whole_df)
-    # count_vector = create_vector_object(whole_df)
-    # x_test_count = transform_ip_data(count_vector, train_df)
-    fetch_accuracy_from_existing_model(x_test_tfidf_ngram, valid_y)
+
+    if "count" in model_name:
+        count_vector = create_vector_object(whole_df)
+        x_test_count = transform_ip_data(count_vector, train_df)
+        feature_vector_valid = x_test_count
+    elif "word" in model_name:
+        x_train_tfidf = create_word_tf_idf_for_ip(train_df, whole_df)
+        feature_vector_valid = x_train_tfidf
+    elif "gram" in model_name:
+        x_test_tfidf_ngram = create_ngram_tf_idf_for_ip(train_df, whole_df)
+        feature_vector_valid = x_test_tfidf_ngram
+    else:
+        x_train_tfidf_ngram_chars = create_character_tf_idf_for_ip(train_df, whole_df)
+        feature_vector_valid = x_train_tfidf_ngram_chars
+
+    fetch_accuracy_from_existing_model(feature_vector_valid, valid_y, model_name)
 
 
 def n_gram_predict_from_ip(batch):
